@@ -1,0 +1,973 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+:root {
+    --primary-color: #007bff;
+    --primary-hover-color: #0056b3;
+    --secondary-color: #6c757d;
+    --background-color: #f4f7f9;
+    --card-background-color: #ffffff;
+    --text-color: #343a40;
+    --label-color: #6c757d;
+    --border-color: #dee2e6;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --font-family: 'Noto Sans KR', sans-serif;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+}
+
+/* --- Global Styles & Resets --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* --- Layout & Structure --- */
+header {
+    background-color: var(--card-background-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 2rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.header-controls {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+}
+
+#toggle-api-key-btn {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+#toggle-api-key-btn:hover {
+    background-color: #e2e6ea;
+    color: var(--text-color);
+    border-color: #ced4da;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.location-selector-group {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+}
+
+.location-selector-group select,
+.location-selector-group input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.location-selector-group select:focus,
+.location-selector-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.location-selector-group #dong-select {
+    flex: 2; /* 상세 주소 입력칸을 더 길게 */
+}
+
+.api-key-container {
+    display: none;
+    margin-top: 1.5rem;
+}
+
+.api-key-container.visible {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.api-key-group {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.api-key-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--label-color);
+    display: block;
+}
+
+.api-key-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.api-key-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.api-key-note {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.api-key-note a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.api-key-note a:hover {
+    text-decoration: underline;
+}
+
+
+main {
+    padding: 2rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* --- Card Styling --- */
+.card {
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+
+/* --- Step 1: Goal Setting --- */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem; /* Reduced margin */
+}
+
+.input-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--label-color);
+}
+
+.input-with-controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-controls input {
+    font-family: var(--font-family);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    padding-right: 70px; /* Space for buttons */
+}
+
+.input-with-controls input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.control-buttons {
+    position: absolute;
+    right: 120px; /* Adjust based on feasibility tag */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+.goal-adjust-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--label-color);
+    cursor: pointer;
+    font-size: 0.8rem;
+    width: 28px;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.goal-adjust-btn:first-child {
+    border-radius: 6px 6px 0 0;
+    border-bottom: 0.5px solid var(--border-color);
+}
+
+.goal-adjust-btn:last-child {
+    border-radius: 0 0 6px 6px;
+    border-top: 0.5px solid var(--border-color);
+}
+
+.goal-adjust-btn:hover {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+#goal-feasibility-tag {
+    position: absolute;
+    right: 1rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#goal-feasibility-tag.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#goal-feasibility-tag.conservative { background-color: var(--primary-color); }
+#goal-feasibility-tag.moderate { background-color: var(--success-color); }
+#goal-feasibility-tag.aggressive { background-color: var(--danger-color); }
+
+.goal-estimation-details {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--label-color);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+    border: 1px solid var(--border-color);
+}
+.goal-estimation-details.visible {
+    visibility: visible;
+    opacity: 1;
+}
+.goal-estimation-details span {
+    font-weight: 700;
+    color: var(--text-color);
+    margin-left: 0.5rem;
+}
+
+
+/* --- Daily P&L Projection Table --- */
+.projection-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+}
+
+.projection-table th, .projection-table td {
+    padding: 0.9rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.projection-table td:last-child {
+    text-align: right;
+    font-weight: 500;
+}
+
+.projection-table thead th {
+    font-weight: 700;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+}
+
+.projection-table .category-header td {
+    font-weight: 700;
+    background-color: #f8f9fa;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.projection-table .total-row td {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.projection-table .net-profit-row td {
+    font-weight: 700;
+    font-size: 1.2rem;
+    background-color: #e7f1ff;
+    color: var(--primary-color);
+}
+
+.projection-table .assumption {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--label-color);
+    font-weight: 400;
+}
+
+.profit-margin {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--label-color);
+    margin-left: 0.5rem;
+}
+
+
+/* --- AI Cost Assumption Reasoning --- */
+#cost-assumption-reasoning-container {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--label-color);
+}
+
+#cost-assumption-reasoning-container h4 {
+    color: var(--text-color);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Info icon */
+#cost-assumption-reasoning-container h4::before {
+    content: 'ℹ️'; /* Using an emoji for simplicity */
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+
+/* --- Dashboard --- */
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric {
+    text-align: center;
+}
+
+.metric .label {
+    display: block;
+    color: var(--label-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.metric .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.metric #last-week-comparison {
+    font-size: 1.5rem;
+}
+.metric #last-week-comparison.up {
+    color: var(--success-color);
+}
+.metric #last-week-comparison.down {
+    color: var(--danger-color);
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 30px;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 30px;
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+
+/* --- AI Recommendation --- */
+.recommendation-output {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#start-recommendation-placeholder {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.recommendation-output .placeholder {
+    color: var(--label-color);
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.cta-button {
+    background-color: var(--primary-color);
+    color: white;
+    font-family: var(--font-family);
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.cta-button:hover {
+    background-color: var(--primary-hover-color);
+    transform: translateY(-2px);
+}
+
+.cta-button:disabled {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    color: var(--label-color);
+}
+
+#loading-message {
+    text-align: center;
+    color: var(--label-color);
+    font-weight: 500;
+    min-height: 48px; /* Prevents layout shift */
+    transition: opacity 0.5s ease-in-out;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary-color);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+.strategy-container {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.ai-goal-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+    background-color: #e9ecef;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+
+.summary-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* MODIFIED */
+    padding: 1rem;
+    background-color: var(--card-background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.summary-item .label {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+    margin-bottom: 1.2rem; /* MODIFIED */
+    display: block;
+}
+
+.summary-item .value {
+    font-size: 2.2rem; /* MODIFIED */
+    font-weight: 700;
+    color: var(--text-color);
+    white-space: nowrap; /* ADDED */
+}
+
+.summary-item.moonshot .label {
+    color: var(--primary-color);
+}
+
+.summary-item.moonshot .value {
+    font-size: 2.6rem; /* MODIFIED */
+    color: var(--primary-color);
+}
+
+.summary-item.realistic {
+    background-color: #f8f9fa;
+    border-style: dashed;
+}
+.summary-item.realistic .label {
+    color: var(--label-color);
+    font-weight: 700;
+}
+.summary-item.realistic .value {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+.summary-item.realistic .reasoning {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    line-height: 1.6;
+    text-align: left;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+
+/* --- Strategy Selector Tabs --- */
+.strategy-selector-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.strategy-option {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--label-color);
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    transform: translateY(2px);
+}
+
+.strategy-option:hover {
+    color: var(--primary-hover-color);
+}
+
+.strategy-option.active {
+    color: var(--primary-color);
+    font-weight: 700;
+    border-bottom-color: var(--primary-color);
+}
+
+
+/* --- Platform Strategy List Layout (Replaces Grid) --- */
+.platform-strategy-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--card-background-color);
+    overflow: hidden; /* Ensures child borders don't poke out */
+}
+
+.platform-strategy-header {
+    padding: 1rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.strategy-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+.strategy-item {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.strategy-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.strategy-item-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.strategy-item .type {
+    font-weight: 500;
+    color: var(--label-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.strategy-item .value {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    word-break: keep-all; /* Prevents awkward breaking in Korean */
+}
+
+.strategy-item .reasoning {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    line-height: 1.7;
+    margin-top: auto; /* Pushes reasoning to the bottom */
+    padding-top: 0.5rem;
+}
+
+/* --- Platform Performance & Costs Section --- */
+.platform-costs {
+    padding: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    background-color: #f8f9fa;
+}
+
+.platform-costs-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Label and Value */
+    gap: 0.75rem 1.5rem; /* row-gap column-gap */
+    align-items: center;
+}
+
+.analysis-item {
+    display: contents; /* Makes children part of the parent grid */
+}
+
+.analysis-label {
+    font-size: 0.9rem;
+    color: var(--label-color);
+    text-align: left;
+}
+
+.cost-item-category {
+    font-weight: 500;
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+.analysis-value {
+    font-weight: 700;
+    text-align: right;
+}
+
+.analysis-item.performance .analysis-label {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.analysis-item.performance .analysis-value {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.analysis-separator {
+    grid-column: 1 / -1;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 0.5rem 0;
+}
+
+.analysis-item.total .analysis-label {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.analysis-item.total .analysis-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.analysis-item.total .efficiency {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--label-color);
+    margin-top: 0.1rem;
+}
+
+.policy-tip {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f1fcf4;
+    border-left: 4px solid var(--success-color);
+    border-radius: 4px;
+}
+.policy-tip h4 {
+    margin: 0 0 0.5rem 0;
+    color: #155724;
+}
+.policy-tip p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* --- Step 3: Alerts --- */
+.alerts-list {
+    list-style: none;
+    padding: 0;
+}
+.alerts-list li {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+}
+.alerts-list li:last-child {
+    margin-bottom: 0;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+.dot.green { background-color: var(--success-color); }
+.dot.yellow { background-color: var(--warning-color); }
+.dot.red { background-color: var(--danger-color); }
+
+.alerts-list .green { border-color: #c3e6cb; background-color: #f1fcf4; }
+.alerts-list .yellow { border-color: #ffeeba; background-color: #fffcf1; }
+.alerts-list .red { border-color: #f5c6cb; background-color: #fdf2f3; }
+
+
+.error {
+    color: var(--danger-color);
+    background-color: rgba(220, 53, 69, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* --- Strategy Summary Card --- */
+#strategy-summary-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.summary-column h3 {
+    font-size: 1.2rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid;
+}
+
+.summary-column h3.performance {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.summary-column h3.costs {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.summary-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+}
+
+.summary-metric-label {
+    font-size: 0.95rem;
+    color: var(--label-color);
+}
+
+.summary-metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.summary-total {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-total .summary-metric-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.summary-total .summary-metric-value {
+    font-size: 1.4rem;
+}
+
+.summary-total .efficiency {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--label-color);
+    text-align: right;
+    margin-top: 0.1rem;
+}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .header-controls {
+        top: 1rem;
+        right: 1rem;
+    }
+    header h1 {
+        font-size: 1.5rem;
+        margin-top: 2.5rem; /* Make space for the button */
+    }
+    .location-selector-group {
+        flex-direction: column;
+    }
+    .ai-goal-summary {
+        grid-template-columns: 1fr;
+    }
+    .goal-arrow {
+        transform: rotate(90deg);
+    }
+    .strategy-list {
+        grid-template-columns: 1fr; /* Stack items on small screens */
+    }
+    .projection-table {
+        font-size: 0.9rem;
+    }
+    .projection-table th, .projection-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    .analysis-grid {
+        gap: 0.5rem 1rem;
+    }
+}
